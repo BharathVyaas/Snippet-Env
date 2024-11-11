@@ -22,7 +22,7 @@ function Body() {
       setSnippets((prev) => [
         {
           id: 0,
-          value: "var a = 1;",
+          value: "",
           language: "javascript",
           created_by: session.user.email,
         },
