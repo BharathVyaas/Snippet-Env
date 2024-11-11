@@ -15,6 +15,8 @@ function Body() {
     callSupa(setSnippets);
   }, []);
 
+  console.log(snippets);
+
   useEffect(() => {
     Eventhandler.subscribe("new-snippet", () =>
       setSnippets((prev) => [
