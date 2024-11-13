@@ -11,7 +11,7 @@ export default async function Home() {
   if (!session) redirect("/api/auth/signin?callbackUrl=/server");
 
   return (
-    <div className="bg-background-main min-h-screen">
+    <div className="">
       <div className="min-w-full">
         <Header />
       </div>

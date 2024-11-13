@@ -12,11 +12,11 @@ function CardBody(props) {
   const { data: session } = useSession();
 
   const [value, setValue] = useState(props.value || "");
+  const [title, setTitle] = useState(props.title || "");
   const [output, steOutput] = useState();
 
   useEffect(() => {
     setValue(props.value);
-    console.log(props.value);
   }, [props.value]);
 
   const onChange = (e) => {
@@ -25,14 +25,28 @@ function CardBody(props) {
 
   const onSave = async () => {
     try {
-      const res = await supabase.from("snippet").insert({
+      const dataObj = {
         created_by: session.user.email,
         value,
         status_reason: "Active",
-      });
+        title: title,
+      };
 
-      if (res.status === 201) {
-        props.callSupa();
+      if (props.snippet.id === 0) {
+        const res = await supabase.from("snippet").insert(dataObj);
+
+        if (res.status === 201) {
+          props.callSupa();
+        }
+      } else {
+        const res = await supabase
+          .from("snippet")
+          .update(dataObj)
+          .eq("id", props.snippet.id);
+
+        if (res.status === 201) {
+          props.callSupa();
+        }
       }
     } catch (error) {
       console.error("failed to save data: \n", error);
@@ -55,29 +69,43 @@ function CardBody(props) {
     }
   };
 
+  const onTitleChange = (e) => {
+    setTitle(e.target.value);
+  };
+
   return (
     <div className="">
       <div className="pt-[.5px] bg-white">
         <MonacoEditor {...props} value={value} onChange={onChange} />
       </div>
 
-      <div className="py-2 px-6 flex justify-between">
-        <div className="space-x-2 py-3">
-          <button
-            className="border-2 border-accent-dark rounded py-[.2px] text-sm w-[5rem]"
-            onClick={onSave}
-          >
-            Save
-          </button>
-          <button
-            className="bg-accent-dark border-accent-dark border-2 text-text-secondary rounded py-[.2px] text-sm w-[5rem]"
-            onClick={onExecute}
-          >
-            Execute
-          </button>
+      <div className="py-2 px-4 flex justify-between">
+        <div className="w-[44%]">
+          <div className="w-[full]">
+            <input
+              className="w-[100%] px-1 rounded bg-background-main outline-none border-b-2 text-text-secondary text-sm border-border-light"
+              placeholder="title..."
+              value={title}
+              onChange={onTitleChange}
+            />
+          </div>
+          <div className="space-x-2 py-3">
+            <button
+              className="border-2 border-accent-dark rounded py-[.2px] text-sm w-[5rem]"
+              onClick={onSave}
+            >
+              {props.snippet?.id === 0 ? "Create" : "Update"}
+            </button>
+            <button
+              className="bg-accent-dark border-accent-dark border-2 text-text-secondary rounded py-[.2px] text-sm w-[5rem]"
+              onClick={onExecute}
+            >
+              Execute
+            </button>
+          </div>
         </div>
 
-        <div>
+        <div className="w-[50%]">
           <Output output={output} />
         </div>
       </div>

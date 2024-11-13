@@ -9,13 +9,11 @@ import { useSnippet } from "../context/SnippetProvider";
 function Body() {
   const { data: session } = useSession();
 
-  const { snippets, setSnippets } = useSnippet([]);
+  const { snippets, setSnippets } = useSnippet();
 
   useEffect(() => {
     callSupa(setSnippets);
   }, []);
-
-  console.log(snippets);
 
   useEffect(() => {
     Eventhandler.subscribe("new-snippet", () =>
@@ -46,6 +44,27 @@ function Body() {
     }
   };
 
+  const onDelete = async (id) => {
+    try {
+      if (id === 0) {
+        setSnippets((prev) => {
+          const [_, ...rest] = prev;
+
+          return rest;
+        });
+      } else {
+        const res = await supabase.from("snippet").delete("*").eq("id", id);
+
+        if (res.status === 204) callSupa();
+        else {
+          console.info(`something went wrong cannot delete ${id}`);
+        }
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <div className="flex flex-col space-y-20 items-center">
       {snippets.map((snippet) => (
@@ -56,8 +75,10 @@ function Body() {
           username={snippet?.created_by || null}
           createdAt={snippet?.created_at || null}
           status={snippet.status_reason || "new"}
+          title={snippet.title || ""}
           //
           snippet={snippet}
+          onDelete={onDelete}
           // to get latest data
           callSupa={callSupa}
         />

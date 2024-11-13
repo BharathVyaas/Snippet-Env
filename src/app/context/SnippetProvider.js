@@ -18,7 +18,7 @@ export const SnippetProvider = ({ children }) => {
 };
 
 export const useSnippet = () => {
-  const { snippets, setSnippets } = useContext(SnippetContext);
+  const props = useContext(SnippetContext);
 
-  return { snippets, setSnippets };
+  return { ...props };
 };

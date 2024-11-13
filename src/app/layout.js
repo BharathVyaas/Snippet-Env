@@ -12,7 +12,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <AuthProvider>
         <SnippetProvider>
-          <body>{children}</body>
+          <body className="bg-background-main min-h-screen">{children}</body>
         </SnippetProvider>
       </AuthProvider>
     </html>

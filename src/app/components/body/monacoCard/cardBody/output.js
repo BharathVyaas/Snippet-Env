@@ -3,10 +3,10 @@ import React from "react";
 
 function Output({ output }) {
   return (
-    <div className="bg-white py-2 my-auto h-full">
+    <div className="py-1 my-auto h-full">
       <Editor
-        width={200}
-        height={40}
+        width={284}
+        height={56}
         language="plaintext"
         value={output}
         options={{
