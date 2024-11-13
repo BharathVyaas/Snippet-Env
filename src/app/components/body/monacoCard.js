@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import CardNav from "./monacoCard/cardNav";
 import CardBody from "./monacoCard/cardBody";

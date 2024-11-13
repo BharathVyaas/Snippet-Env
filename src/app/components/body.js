@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import MonacoCard from "./body/monacoCard";
 import { supabase } from "@/lib/supabaseClient";
 import { Eventhandler } from "@/services/event";
@@ -65,45 +65,62 @@ function Body() {
     }
   };
 
-  const onPositionChange = (oldPosition, newPosition) => {
-    // Check if `snippets` is an array before proceeding
+  const onPositionChange = async (oldPosition, newPosition) => {
     if (!Array.isArray(snippets)) {
       console.error("snippets is not an array:", snippets);
       return;
     }
 
-    // Create a deep copy of snippets to avoid mutating the original array directly
     const updatedSnippets = snippets.map((snippet) => ({ ...snippet }));
 
-    // Find the snippet being moved
     const movedSnippet = updatedSnippets.find(
       (snippet) => snippet.position === oldPosition
     );
-    if (!movedSnippet) return; // Exit if the snippet to move is not found
+    if (!movedSnippet) return;
 
-    // Adjust positions of other snippets
+    const snippetsToUpdate = [];
+
     updatedSnippets.forEach((snippet) => {
       if (newPosition > oldPosition) {
-        // Moving the snippet down
         if (snippet.position > oldPosition && snippet.position <= newPosition) {
           snippet.position--;
+          snippetsToUpdate.push({ id: snippet.id, position: snippet.position });
         }
       } else if (newPosition < oldPosition) {
-        // Moving the snippet up
         if (snippet.position < oldPosition && snippet.position >= newPosition) {
           snippet.position++;
+          snippetsToUpdate.push({ id: snippet.id, position: snippet.position });
         }
       }
     });
 
-    // Set the new position for the moved snippet
     movedSnippet.position = newPosition;
+    snippetsToUpdate.push({
+      id: movedSnippet.id,
+      position: movedSnippet.position,
+    });
 
-    // Sort by position to keep the order consistent
     updatedSnippets.sort((a, b) => a.position - b.position);
 
-    // Reverse the order and update the state
     setSnippets(updatedSnippets.reverse());
+
+    try {
+      await updateSnippetsInBackend(snippetsToUpdate);
+    } catch (error) {
+      console.error("Error updating positions in the backend:", error);
+    }
+  };
+  const updateSnippetsInBackend = async (snippets) => {
+    try {
+      for (let snippet of snippets) {
+        await supabase
+          .from("snippet")
+          .update({ position: snippet.position })
+          .eq("id", snippet.id);
+      }
+    } catch (error) {
+      console.error("Error updating snippet position:", error);
+    }
   };
 
   return (
