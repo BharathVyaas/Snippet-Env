@@ -2,10 +2,10 @@
 
 import { useSession } from "next-auth/react";
 import Image from "next/image";
-import React from "react";
+import React, { useEffect } from "react";
 import binIcon from "../../../assets/bin.png";
 
-function CardNav({ username, id, onDelete }) {
+function CardNav({ username, id, onDelete, position, onPositionChange }) {
   const { data: session } = useSession();
 
   return (
@@ -22,17 +22,29 @@ function CardNav({ username, id, onDelete }) {
       </div>
 
       {username === session.user?.email && (
-        <div className="pt-1 pr-1">
-          <button onClick={() => onDelete(id)}>
-            <Image src={binIcon} alt="delete" width={18} height={18} />
-          </button>
-          <a
-            className="hidden"
-            href="https://www.flaticon.com/free-icons/trash"
-            title="trash icons"
-          >
-            Trash icons created by Freepik - Flaticon
-          </a>
+        <div className="flex space-x-2">
+          <div>
+            <input
+              type="number"
+              className="w-12 rounded bg-background-main border-b-2 border-border-light text-text-secondary"
+              value={position}
+              onChange={(e) =>
+                onPositionChange(position, Number(e.target.value))
+              }
+            />
+          </div>
+          <div className="pt-1 pr-1">
+            <button onClick={() => onDelete(id)}>
+              <Image src={binIcon} alt="delete" width={18} height={18} />
+            </button>
+            <a
+              className="hidden"
+              href="https://www.flaticon.com/free-icons/trash"
+              title="trash icons"
+            >
+              Trash icons created by Freepik - Flaticon
+            </a>
+          </div>
         </div>
       )}
     </div>

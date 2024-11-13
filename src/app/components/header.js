@@ -3,6 +3,8 @@
 import { Eventhandler } from "@/services/event";
 import { useSnippet } from "../context/SnippetProvider";
 import { useEffect, useState } from "react";
+import addIcon from "../assets/add.png";
+import Image from "next/image";
 
 function Header() {
   const { snippets } = useSnippet([]);
@@ -28,7 +30,20 @@ function Header() {
             Eventhandler.notify("new-snippet");
           }}
         >
-          +
+          <Image
+            src={addIcon}
+            alt="add"
+            width={18}
+            height={18}
+            title="add new snippet"
+          />
+          <a
+            href="https://www.flaticon.com/free-icons/plus"
+            title="plus icons"
+            className="hidden"
+          >
+            Plus icons created by srip - Flaticon
+          </a>
         </button>
       </div>
     </div>

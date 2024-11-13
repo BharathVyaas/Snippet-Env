@@ -10,6 +10,8 @@ function MonacoCard(props) {
           username={props.username}
           id={props.snippet.id}
           onDelete={props.onDelete}
+          position={props.snippet.position || 0}
+          onPositionChange={props.onPositionChange}
         />
       </div>
 

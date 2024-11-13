@@ -36,7 +36,7 @@ function Body() {
       const res = await supabase
         .from("snippet")
         .select("*")
-        .order("created_at", { ascending: false });
+        .order("position", { ascending: false });
 
       if (res && res.data) setSnippets(res.data);
     } catch (error) {
@@ -65,6 +65,47 @@ function Body() {
     }
   };
 
+  const onPositionChange = (oldPosition, newPosition) => {
+    // Check if `snippets` is an array before proceeding
+    if (!Array.isArray(snippets)) {
+      console.error("snippets is not an array:", snippets);
+      return;
+    }
+
+    // Create a deep copy of snippets to avoid mutating the original array directly
+    const updatedSnippets = snippets.map((snippet) => ({ ...snippet }));
+
+    // Find the snippet being moved
+    const movedSnippet = updatedSnippets.find(
+      (snippet) => snippet.position === oldPosition
+    );
+    if (!movedSnippet) return; // Exit if the snippet to move is not found
+
+    // Adjust positions of other snippets
+    updatedSnippets.forEach((snippet) => {
+      if (newPosition > oldPosition) {
+        // Moving the snippet down
+        if (snippet.position > oldPosition && snippet.position <= newPosition) {
+          snippet.position--;
+        }
+      } else if (newPosition < oldPosition) {
+        // Moving the snippet up
+        if (snippet.position < oldPosition && snippet.position >= newPosition) {
+          snippet.position++;
+        }
+      }
+    });
+
+    // Set the new position for the moved snippet
+    movedSnippet.position = newPosition;
+
+    // Sort by position to keep the order consistent
+    updatedSnippets.sort((a, b) => a.position - b.position);
+
+    // Reverse the order and update the state
+    setSnippets(updatedSnippets.reverse());
+  };
+
   return (
     <div className="flex flex-col space-y-20 items-center">
       {snippets.map((snippet) => (
@@ -79,6 +120,7 @@ function Body() {
           //
           snippet={snippet}
           onDelete={onDelete}
+          onPositionChange={onPositionChange}
           // to get latest data
           callSupa={callSupa}
         />
