@@ -24,12 +24,14 @@ function CardBody(props) {
   };
 
   const onSave = async () => {
+    console.log(props);
     try {
       const dataObj = {
         created_by: session.user.email,
         value,
         status_reason: "Active",
         title: title,
+        position: props.snippet.position,
       };
 
       if (props.snippet.id === 0) {
@@ -55,6 +57,15 @@ function CardBody(props) {
 
   const onExecute = async () => {
     try {
+      if (
+        (props.language === "javascript" && value.includes("prompt")) ||
+        value.includes("console") ||
+        value.includes("alert") ||
+        value.includes("confirm")
+      ) {
+        eval(value);
+      }
+
       const res = await axios.post("https://emkc.org/api/v2/piston/execute", {
         language: props.language,
         version: LANGUAGE_VERSIONS[props.language],

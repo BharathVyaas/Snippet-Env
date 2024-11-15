@@ -22,6 +22,7 @@ function Body() {
           id: 0,
           value: "",
           language: "javascript",
+          position: snippets?.length || 0,
           created_by: session.user.email,
         },
         ...prev,
