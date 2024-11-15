@@ -23,7 +23,7 @@ function Body() {
           value: "",
           language: "javascript",
           position: snippets?.length || 0,
-          created_by: session.user.email,
+          created_by: session?.user?.email,
         },
         ...prev,
       ])

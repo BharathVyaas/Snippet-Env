@@ -21,7 +21,7 @@ function CardNav({ username, id, onDelete, position, onPositionChange }) {
         <p className="text-sm">{username || "placeholder"}</p>
       </div>
 
-      {username === session.user?.email && (
+      {username === session?.user?.email && (
         <div className="flex space-x-2">
           <div>
             <input

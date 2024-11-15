@@ -27,7 +27,7 @@ function CardBody(props) {
     console.log(props);
     try {
       const dataObj = {
-        created_by: session.user.email,
+        created_by: session?.user?.email,
         value,
         status_reason: "Active",
         title: title,
