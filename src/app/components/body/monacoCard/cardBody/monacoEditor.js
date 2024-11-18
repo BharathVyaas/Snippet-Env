@@ -15,7 +15,7 @@ function MonacoEditor({
   return (
     <div className="shadow-sm shadow-text-secondary border-t-4 border-white">
       <Editor
-        height={320}
+        height={380}
         language={language}
         value={value}
         onChange={onChange}

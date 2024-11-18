@@ -5,8 +5,8 @@ function Output({ output }) {
   return (
     <div className="py-1 my-auto h-full">
       <Editor
-        width={300}
-        height={56}
+        width={460}
+        height={146}
         language="plaintext"
         value={output}
         options={{

@@ -6,7 +6,7 @@ import CardBody from "./monacoCard/cardBody";
 
 function MonacoCard(props) {
   return (
-    <div className="w-[60%] max-w-[800px] h-[450px] shadow-xl rounded-md bg-background-card text-text-primary">
+    <div className="w-[60%] max-w-[800px] h-[600px] shadow-xl rounded-md bg-background-card text-text-primary">
       <div className="">
         <CardNav
           username={props.username}
