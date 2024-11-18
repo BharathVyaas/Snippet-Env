@@ -5,7 +5,7 @@ function Output({ output }) {
   return (
     <div className="py-1 my-auto h-full">
       <Editor
-        width={284}
+        width={300}
         height={56}
         language="plaintext"
         value={output}

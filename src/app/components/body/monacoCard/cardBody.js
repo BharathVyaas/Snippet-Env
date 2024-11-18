@@ -7,9 +7,11 @@ import { useSession } from "next-auth/react";
 import { supabase } from "@/lib/supabaseClient";
 import axios from "axios";
 import { LANGUAGE_VERSIONS } from "@/constents";
+import { useSnippet } from "@/app/context/SnippetProvider";
 
 function CardBody(props) {
   const { data: session } = useSession();
+  const { snippets } = useSnippet();
 
   const [value, setValue] = useState(props.value || "");
   const [title, setTitle] = useState(props.title || "");
@@ -31,7 +33,7 @@ function CardBody(props) {
         value,
         status_reason: "Active",
         title: title,
-        position: props.snippet.position,
+        position: props.snippet.position || snippets?.length,
       };
 
       if (props.snippet.id === 0) {
@@ -116,7 +118,7 @@ function CardBody(props) {
           </div>
         </div>
 
-        <div className="w-[50%]">
+        <div className="w-[50%] flex justify-end">
           <Output output={output} />
         </div>
       </div>
